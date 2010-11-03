@@ -109,8 +109,69 @@ public class ExtensionManager {
 
 	
 	private void createHardCodeExtensions(){
+		
+		Collection<Extension> extensions = this.extensions;
+		Collection<Extension> libraries = this.libraries;
+		Map<String,Extension> extensionById = this.extensionById;
+		extensions.clear();
+		libraries.clear();
+		extensionById.clear();
+		
 		addExtension("org.lobobrowser.primary.ext.ExtensionImpl", "Lobo's Primary Extension", 10, true );
 		addExtension("org.lobobrowser.jweb.ext.NavigatorExtensionImpl", "Java Web Content", 7, false );
+		
+	ClassLoader rootClassLoader = this.getClass().getClassLoader();
+		
+		// Create class loader for extension "libraries"		
+		ArrayList<URL> libraryURLCollection = new ArrayList<URL>();
+		for(Extension ei : libraries) {
+			try {
+				libraryURLCollection.add(ei.getCodeSource());
+				System.out.println("SourceCode: "+ei.getCodeSource());
+			} catch(java.net.MalformedURLException thrown) {
+				logger.log(Level.SEVERE, "createExtensions()", thrown);
+			}
+		}
+		if(logger.isLoggable(Level.INFO)) {
+			logger.info("createExtensions(): Creating library class loader with URLs=[" + libraryURLCollection + "].");
+		}
+		ClassLoader librariesCL = new URLClassLoader(libraryURLCollection.toArray(new URL[0]), rootClassLoader);		
+				
+		// Initialize class loader in each extension, using librariesCL as
+		// the parent class loader. Extensions are initialized in parallel.
+		Collection<JoinableTask> tasks = new ArrayList<JoinableTask>();
+		PlatformInit pm = PlatformInit.getInstance();
+		for(Extension ei : extensions) {
+			final ClassLoader pcl = librariesCL;
+			final Extension fei = ei;
+			// Initialize rest of them in parallel.
+			JoinableTask task = new JoinableTask() {
+				public void execute() {
+					try {
+						System.out.println("Init Class Loader !");
+						fei.initClassLoader(pcl);
+					} catch(Exception err) {
+						logger.log(Level.WARNING, "Unable to create class loader for " + fei + ".", err);
+					}
+				}
+
+				public String toString() {
+					return "createExtensions:" + fei;
+				}
+			};
+			tasks.add(task);
+			pm.scheduleTask(task);
+		}
+
+		// Join tasks to make sure all extensions are
+		// initialized at this point.
+		for(JoinableTask task : tasks) {
+			try {
+				task.join();
+			} catch(InterruptedException ie) {
+				// ignore
+			}
+		}
 	}
 	
 	private void addExtension(File file) throws java.io.IOException {
@@ -150,7 +211,7 @@ public class ExtensionManager {
 				logger.info("createExtensions(): Loaded extension: " + ei); 
 			}
 			extensions.add(ei);
-		}		
+		}
 	}
 	
 	

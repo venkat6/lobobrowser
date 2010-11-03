@@ -2,8 +2,8 @@
 <classpath>
 	<classpathentry kind="src" path=""/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="C:/Documents and Settings/SdsOne/Escritorio/Taller de Ingenieria de Software/Lobo workspace/Poche/Platform_Core/extensions/cobra-no-commons.jar"/>
-	<classpathentry kind="lib" path="C:/Documents and Settings/SdsOne/Escritorio/Taller de Ingenieria de Software/Lobo workspace/Poche/Platform_Core/extensions/jlfgr-1_0.jar"/>
-	<classpathentry kind="lib" path="C:/Documents and Settings/SdsOne/Escritorio/Taller de Ingenieria de Software/Lobo workspace/Poche/Platform_Core/extensions/js.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Poche/Desktop/Lobo workspace/Platform_Core/extensions/cobra-no-commons.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Poche/Desktop/Lobo workspace/Platform_Core/extensions/jlfgr-1_0.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Poche/Desktop/Lobo workspace/Platform_Core/extensions/js.jar"/>
 	<classpathentry kind="output" path=""/>
 </classpath>
