@@ -32,7 +32,6 @@ import org.lobobrowser.store.StorageManager;
  * with an instance obtained by calling {@link #getInstance()}.
  */
 public class GeneralSettings implements java.io.Serializable {
-	private static final Logger logger = Logger.getLogger(GeneralSettings.class.getName());
 	private static final String DEFAULT_STARTUP = "http://lobobrowser.org/browser/home.jsp";
     private static final long serialVersionUID = 22574500070000402L;
 	private static final GeneralSettings instance;
@@ -48,7 +47,6 @@ public class GeneralSettings implements java.io.Serializable {
 		try {
 			ins = (GeneralSettings) StorageManager.getInstance().retrieveSettings(GeneralSettings.class.getSimpleName(), GeneralSettings.class.getClassLoader());
 		} catch(Exception err) {
-			logger.log(Level.WARNING, "getInstance(): Unable to retrieve settings.", err);
 		}
 		if(ins == null) {
 			ins = new GeneralSettings();
@@ -76,7 +74,6 @@ public class GeneralSettings implements java.io.Serializable {
 		try {
 			this.saveChecked();		
 		} catch(java.io.IOException ioe) {
-			logger.log(Level.WARNING, "save(): Unable to save settings", ioe);
 		}
 	}
 	

@@ -48,7 +48,8 @@ import org.lobobrowser.main.*;
  * @see PlatformInit#init(boolean, boolean)
  */
 public class BrowserPanel extends JPanel implements NavigatorWindow, BrowserWindow, WindowCallback {
-	private static final Logger logger = Logger.getLogger(BrowserPanel.class.getName());
+
+	
 	private final boolean hasAddressBar;
 	private final boolean hasToolBar;
 	private final boolean hasStatusBar;
@@ -449,9 +450,7 @@ public class BrowserPanel extends JPanel implements NavigatorWindow, BrowserWind
 		}
 		final NavigatorWindowEvent event = new NavigatorWindowEvent(this, NavigatorEventType.DOCUMENT_RENDERING, frame, response);		
 		this.latestAccessedFrame = event.getNavigatorFrame();
-		if(!EVENT.fireEvent(event)) {
-			logger.warning("handleDocumentRendering(): Did not deliver event to any window: " + event);
-		}
+
 	}
 	
 	private ExtensionManager getSafeExtensionManager() {

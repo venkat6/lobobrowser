@@ -33,7 +33,6 @@ import org.lobobrowser.ua.UserAgent;
  */
 public class UserAgentImpl implements UserAgent {
     private static final UserAgentImpl instance = new UserAgentImpl();
-    //private static final Logger logger = Logger.getLogger(UserAgentImpl.class.getName());
     
     private UserAgentImpl() {}
     

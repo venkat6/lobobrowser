@@ -31,7 +31,6 @@ import org.lobobrowser.store.*;
 import org.lobobrowser.util.*;
 
 public class CacheInfo {
-	private static final Logger logger = Logger.getLogger(CacheInfo.class.getName());
 	static final String HEADER_REQUEST_TIME = "X-Request-Time";
 	private final URL url;
 
@@ -124,9 +123,7 @@ public class CacheInfo {
 			URLConnection connection = this.getURLConnection();
 			String requestTimeText = connection.getHeaderField(HEADER_REQUEST_TIME);
 			if(requestTimeText == null) {
-				if(logger.isLoggable(Level.INFO)) {
-					logger.info("getExpires(): Cached content does not have " + HEADER_REQUEST_TIME + " header: " + this.url + ".");
-				}
+
 				return new Long(0);
 			}
 			long requestTime = Long.parseLong(requestTimeText);
@@ -177,10 +174,8 @@ public class CacheInfo {
 				in.close();
 			}
 		} catch(IOException ioe) {
-			logger.log(Level.WARNING, "getPersistentObject(): Unable to load persistent cached object.", ioe);
 			return null;
 		} catch(ClassNotFoundException ioe) {
-			logger.log(Level.WARNING, "getPersistentObject(): Failed to load persistent cached object apparently due to versioning issue.", ioe);
 			return null;
 		}
 	}	
@@ -192,7 +187,6 @@ public class CacheInfo {
 			cm.removePersistent(this.url, false);
 			cm.removePersistent(this.url, true);
 		} catch(IOException ioe) {
-			logger.log(Level.WARNING, "delete()", ioe);
 		}
 	}
 

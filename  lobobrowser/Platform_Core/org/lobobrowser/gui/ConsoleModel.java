@@ -33,7 +33,6 @@ import java.util.logging.*;
  */
 public class ConsoleModel extends PlainDocument {
 	private static final int MAX_LENGTH = 20000;
-	private static final Logger logger = Logger.getLogger(ConsoleModel.class.getName()); 
 	private final OutputStream outputStream;
 	
 	/**
@@ -62,7 +61,6 @@ public class ConsoleModel extends PlainDocument {
 			}
 		} catch(Throwable err) {
 			// No standard I/O should be here!
-			logger.log(Level.SEVERE, "append()", err);
 		}
 	}
 	

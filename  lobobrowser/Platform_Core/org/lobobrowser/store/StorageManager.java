@@ -37,7 +37,6 @@ import org.lobobrowser.util.*;
  *  * @author J. H. S.
  */
 public class StorageManager implements Runnable {
-	private static final Logger logger = Logger.getLogger(StorageManager.class.getName());
 	private static final long HOST_STORE_QUOTA = 200 * 1024;
 	// Note that the installer makes assumptions about these names.
 	private static final String HOST_STORE_DIR = "HostStore";
@@ -233,7 +232,6 @@ public class StorageManager implements Runnable {
     				stores[i].updateSizeFile();
     			}
     		} catch(Throwable err) {
-    			logger.log(Level.SEVERE, "run()", err);
     			try {
     				Thread.sleep(MANAGED_STORE_UPDATE_DELAY);
     			} catch(java.lang.InterruptedException ie) {

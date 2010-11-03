@@ -36,7 +36,6 @@ import org.lobobrowser.util.*;
  * Browser windows are created by this factory by default.
  */
 public class DefaultWindowFactory implements WindowFactory {
-	private static final Logger logger = Logger.getLogger(DefaultWindowFactory.class.getName());
 	private static DefaultWindowFactory instance = new DefaultWindowFactory();
 	private static final String DEFAULT_ICON_URL = "res:/images/LoboLogo16.png";
 	public final EventDispatch evtWindowShown = new EventDispatch(); 
@@ -81,7 +80,6 @@ public class DefaultWindowFactory implements WindowFactory {
 					icon = new ImageIcon(imageBytes);
 					this.imageMap.put(urlOrPath, icon);
 				} catch(Exception err) {
-					logger.log(Level.WARNING, "getImageIcon(): Unable to load image: " + urlOrPath, err);
 				}
 			}
 			return icon;
@@ -109,17 +107,13 @@ public class DefaultWindowFactory implements WindowFactory {
 				this.framesById.put(windowId, window);
 			}
 			window.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-			if(logger.isLoggable(Level.INFO)) {
-				logger.info("createBaseWindow(): Adding window listener: window=" + window + ",windowId=" + windowId);
-			}
+
 			window.addWindowListener(new java.awt.event.WindowAdapter() {
 				@Override
 				public void windowClosing(WindowEvent e) {
 					super.windowClosing(e);
 					if(!window.isBoundsAssigned()) {
-						if(logger.isLoggable(Level.INFO)) {
-							logger.info("windowClosing(): Saving general settings: bounds=" + window.getBounds());
-						}
+
 						GeneralSettings settings = generalSettings;
 						settings.setInitialWindowBounds(window.getBounds());
 						settings.save();
@@ -132,12 +126,9 @@ public class DefaultWindowFactory implements WindowFactory {
 					super.windowClosed(e);
 					Set frames = DefaultWindowFactory.this.frames;
 					synchronized(DefaultWindowFactory.this) {
-						if(logger.isLoggable(Level.INFO)) {
-							logger.info("windowClosed(): frames.size()=" + frames.size() + ",exitWhenAllWindowsClosed=" + exitWhenAllWindowsClosed);
-						}
+
 						frames.remove(window);
 						if(frames.size() == 0 && exitWhenAllWindowsClosed) {
-							logger.warning("Exiting JVM because all windows are now closed!");
 							PlatformInit.shutdown();
 						}
 					}
@@ -186,14 +177,12 @@ public class DefaultWindowFactory implements WindowFactory {
 			try {
 				width = Integer.parseInt(widthText);
 			} catch(NumberFormatException nfe) {
-				logger.log(Level.WARNING, "PlatformWindowContextImpl(): Unable to parse window width.", nfe);
 			}
 		}
 		if(heightText != null) {
 			try {
 				height = Integer.parseInt(heightText);
 			} catch(NumberFormatException nfe) {
-				logger.log(Level.WARNING, "PlatformWindowContextImpl(): Unable to parse window height.", nfe);
 			}
 		}
 		final AbstractBrowserWindow window = this.createBaseWindow(windowId, windowContext, hasMenuBar, hasAddressBar, hasToolBar, hasStatusBar);
@@ -245,14 +234,12 @@ public class DefaultWindowFactory implements WindowFactory {
 			try {
 				width = Integer.parseInt(widthText);
 			} catch(NumberFormatException nfe) {
-				logger.log(Level.WARNING, "PlatformWindowContextImpl(): Unable to parse window width.", nfe);
 			}
 		}
 		if(heightText != null) {
 			try {
 				height = Integer.parseInt(heightText);
 			} catch(NumberFormatException nfe) {
-				logger.log(Level.WARNING, "PlatformWindowContextImpl(): Unable to parse window height.", nfe);
 			}
 		}
 		window.setResizable(isResizable);

@@ -24,7 +24,6 @@
 package org.lobobrowser.request;
 
 import java.net.URL;
-import java.util.logging.*;
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLSession;
 import org.lobobrowser.clientlet.*;
@@ -35,7 +34,6 @@ import org.lobobrowser.ua.*;
  * @author J. H. S.
  */
 public abstract class SimpleRequestHandler implements RequestHandler {
-	private static final Logger logger = Logger.getLogger(SimpleRequestHandler.class.getName());
 	private final ClientletRequest request;
 	private final RequestType requestType;
 	
@@ -83,7 +81,6 @@ public abstract class SimpleRequestHandler implements RequestHandler {
 	}
 
 	public boolean handleException(ClientletResponse response, Throwable exception) throws ClientletException {
-		logger.log(Level.WARNING, "handleException(): Error processing response=[" + response + "]", exception);
 		return true;
 	}
 	

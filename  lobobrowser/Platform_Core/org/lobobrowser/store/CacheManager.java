@@ -37,7 +37,6 @@ import org.lobobrowser.security.*;
  * @author J. H. S.
  */
 public final class CacheManager implements Runnable {
-	private static final Logger logger = Logger.getLogger(CacheManager.class.getName());
 	private static final int AFTER_SWEEP_SLEEP = 5 * 60 * 1000;
 	private static final int INITIAL_SLEEP = 30 * 1000;
 	private static final int DELETE_TOLERANCE = 60 * 1000;
@@ -219,7 +218,6 @@ public final class CacheManager implements Runnable {
     			this.sweepCache();
     			Thread.sleep(AFTER_SWEEP_SLEEP);
     		} catch(Throwable err) {
-    			logger.log(Level.SEVERE, "run()", err);
     			try {
     				Thread.sleep(AFTER_SWEEP_SLEEP);
     			} catch(java.lang.InterruptedException ie) {
@@ -235,9 +233,6 @@ public final class CacheManager implements Runnable {
     
     private void sweepCache() throws Exception {
     	CacheStoreInfo sinfo = this.getCacheStoreInfo();
-    	if(logger.isLoggable(Level.INFO)) {
-    		logger.info("sweepCache(): Cache size is " + sinfo.getLength() + " with a max of " + this.getMaxCacheSize() + ". The number of cache files is " + sinfo.getFileInfos().length + ".");
-    	}
     	long oversize = sinfo.getLength() - this.getMaxCacheSize();
     	if(oversize > 0) {
     		CacheFileInfo[] finfos = sinfo.getFileInfos();
@@ -255,9 +250,6 @@ public final class CacheManager implements Runnable {
     						long time1 = System.currentTimeMillis();
     						finfo.delete();
     						long time2 = System.currentTimeMillis();
-    						if(logger.isLoggable(Level.INFO)) {
-    							logger.info("sweepCache(): Removed " + finfo + " in " + (time2 - time1) + " ms.");
-    						}
     						oversize -= finfo.getInitialLength();
     						if(oversize <= 0) {
     							break;
@@ -265,7 +257,6 @@ public final class CacheManager implements Runnable {
     					}
     				}
     			} catch(Throwable thrown) {
-    				logger.log(Level.WARNING, "sweepCache()", thrown);
     			}
     		}
     	}
@@ -281,7 +272,6 @@ public final class CacheManager implements Runnable {
     private void populateCacheStoreInfo(CacheStoreInfo csinfo, File directory) {
     	File[] files = directory.listFiles();
     	if(files == null) {
-    	    logger.severe("populateCacheStoreInfo(): Unexpected: '" + directory + "' is not a directory.");
     	    return;
     	}
     	if(files.length == 0) {

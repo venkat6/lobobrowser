@@ -27,7 +27,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.util.*;
-import java.util.logging.*;
 import org.lobobrowser.clientlet.ClientletResponse;
 import org.lobobrowser.ua.*;
 import org.lobobrowser.util.*;
@@ -40,7 +39,6 @@ import java.io.*;
  * @author J. H. S.
  */
 public class ClientletResponseImpl implements ClientletResponse {
-	private static final Logger logger = Logger.getLogger(ClientletResponseImpl.class.getName());
 	private static final int MAX_CACHE_BUFFER_SIZE = 10 * 1024 * 1024;
 	
     private final URLConnection connection;
@@ -245,7 +243,6 @@ public class ClientletResponseImpl implements ClientletResponse {
     			try {
     				return rin.getBytesRead();
     			} catch(BufferExceededException bee) {
-    				logger.warning("getStoredContent(): Recorded stream buffer size exceeded.");
     				return null;
     			}
     		}
@@ -388,7 +385,6 @@ public class ClientletResponseImpl implements ClientletResponse {
 		try {
 			return Urls.PATTERN_RFC1123.parse(dateText);
 		} catch(java.text.ParseException pe) {
-			logger.warning("getDate(): Bad date '" + dateText + "' from " + this.getResponseURL() + ".");
 			return null;
 		}
 	}

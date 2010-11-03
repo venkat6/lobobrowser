@@ -27,7 +27,7 @@ import javax.swing.*;
 
 import java.io.File;
 import java.net.*;
-import java.util.logging.*;
+
 
 import org.lobobrowser.gui.*;
 import org.lobobrowser.request.*;
@@ -132,6 +132,7 @@ public class PlatformInit {
 	 *                of two different logging configurations is used.
 	 */
 	public void initLogging(boolean debugOn) throws Exception {
+		debugOn=false;
 		// Set up debugging & console
 		String loggingToken = debugOn ? "logging-debug" : "logging";
 		java.io.InputStream in = this.getClass().getResourceAsStream("/properties/" + loggingToken + ".properties");
@@ -142,21 +143,13 @@ public class PlatformInit {
 			}
 		}
 		try {
-			java.util.logging.LogManager.getLogManager().readConfiguration(in);
+//			java.util.logging.LogManager.getLogManager().readConfiguration(in);
 		} finally {
 			in.close();
 		}
 		// Configure log4j
-		Logger logger = Logger.getLogger(PlatformInit.class.getName());
-		if(logger.isLoggable(Level.INFO)) {
-			logger.warning("Entry(): Logger INFO level is enabled.");
-			java.util.Properties properties = System.getProperties();
-			java.util.Iterator i = properties.entrySet().iterator();
-			while(i.hasNext()) {
-				Map.Entry entry = (Map.Entry) i.next();
-				logger.info("main(): " + entry.getKey() + "=" + entry.getValue());
-			}
-		}		
+		
+			
 	}
 
 	/**
@@ -264,8 +257,7 @@ public class PlatformInit {
 	public void launch() throws MalformedURLException {
 		SecurityManager sm = System.getSecurityManager();
 		if(sm == null) {
-			Logger logger = Logger.getLogger(PlatformInit.class.getName());
-			logger.warning("launch(): Security manager not set!");
+
 		}
 		String[] startupURLs = this.generalSettings.getStartupURLs();
 		for(String url : startupURLs) {
@@ -386,11 +378,8 @@ public class PlatformInit {
 			appDir = installDir;
 			this.applicationDirectory = appDir;
 			
-			// Static logger should not be created in this class.
-			Logger logger = Logger.getLogger(this.getClass().getName());
-			if(logger.isLoggable(Level.INFO)) {
-				logger.info("getApplicationDirectory(): url=" + url + ",appDir=" + appDir);
-			}
+
+			
 		}
 		return appDir;
 	}	

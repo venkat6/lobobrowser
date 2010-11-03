@@ -37,7 +37,7 @@ public class ID {
 	private static final Random RANDOM2;
 	private static final Random RANDOM3;
 	private static final long globalProcessID;
-    private static final Logger logger = Logger.getLogger(ID.class.getName());
+
 
     static {
 		long time = System.currentTimeMillis();
@@ -49,7 +49,6 @@ public class ID {
 			inetAddress = InetAddress.getLocalHost();
 			addressHashCode = inetAddress.getHostName().hashCode() ^ inetAddress.getHostAddress().hashCode();
 		} catch(Exception err) {
-			logger.log(Level.WARNING, "Unable to get local host information.", err);
 			addressHashCode = ID.class.hashCode();
 		}		
 		globalProcessID = time ^ nanoTime ^ freeMemory ^ addressHashCode;		

@@ -49,7 +49,7 @@ import org.w3c.dom.Document;
 
 public class NetworkRequestImpl implements NetworkRequest {
 	//TODO: Class not thread safe?	
-	private static final Logger logger = Logger.getLogger(NetworkRequestImpl.class.getName());
+
 	private final EventDispatch READY_STATE_CHANGE = new EventDispatch();
 	private volatile int readyState = NetworkRequest.STATE_UNINITIALIZED;
 	private volatile LocalResponse localResponse;
@@ -177,7 +177,7 @@ public class NetworkRequestImpl implements NetworkRequest {
 				this.currentRequestHandler = null;
 			}
 		} catch(Exception err) {
-			logger.log(Level.SEVERE, "open()", err);
+
 		}		
 	}
 
@@ -229,9 +229,7 @@ public class NetworkRequestImpl implements NetworkRequest {
 			long lastProgress = 0;
 			while((numRead = in.read(buffer)) != -1) {
 				if(numRead == 0) {
-				    if(logger.isLoggable(Level.INFO)) {
-				        logger.info("setResponse(): Read zero bytes from " + response.getResponseURL());
-				    }
+				   
 					break;
 				}
 				readSoFar += numRead;
@@ -261,7 +259,7 @@ public class NetworkRequestImpl implements NetworkRequest {
 			}
 			this.changeReadyState(NetworkRequest.STATE_COMPLETE);
 		} catch(IOException ioe) {
-			logger.log(Level.WARNING, "setResponse()", ioe);
+
 			this.localResponse = null;
 			this.changeReadyState(NetworkRequest.STATE_COMPLETE);
 		}
@@ -285,7 +283,6 @@ public class NetworkRequestImpl implements NetworkRequest {
 		 */
 		@Override
 		public boolean handleException(ClientletResponse response, Throwable exception) throws ClientletException {
-			logger.log(Level.WARNING, "handleException(): url=" + this.getLatestRequestURL() + ",response=[" + response + "]", exception);
 			return true;
 		}
 
@@ -353,7 +350,6 @@ public class NetworkRequestImpl implements NetworkRequest {
 			try {
 				responseText = new String(bytes, charset);
 			} catch(UnsupportedEncodingException uee) {
-				logger.log(Level.WARNING, "getResponseText()", uee);
 				try {
 					responseText = new String(bytes, "ISO-8859-1");
 				} catch(UnsupportedEncodingException uee2) {
@@ -382,7 +378,6 @@ public class NetworkRequestImpl implements NetworkRequest {
 					try {
 						doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(in);
 					} catch(Exception err) {
-						logger.log(Level.SEVERE, "getResponseXML()", err);
 					}
 					this.document = doc;
 				}
