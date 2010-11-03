@@ -137,6 +137,21 @@ public class Extension implements Comparable, NavigatorExtensionContext {
 		}
 	}
 
+	
+	public Extension(String nombreClase, String extID,int prioridad, boolean primario) {
+		this.clientletSelectors = new LinkedList<ClientletSelector>();
+		this.connectionProcessors = new ArrayList<ConnectionProcessor>();
+		this.navigationListeners = new ArrayList<NavigationListener>();
+		this.extRoot = null;
+		this.jarFile=null;
+		this.isLibrary=false;
+		this.isPrimary = primario;
+		this.extId = extID;
+		this.extClassName = nombreClase;
+		this.priority = prioridad;
+	}
+	
+	
 	public String getId() {
 		return this.extId;
 	}

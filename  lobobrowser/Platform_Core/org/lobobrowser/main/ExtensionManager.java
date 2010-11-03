@@ -46,7 +46,8 @@ public class ExtensionManager {
 	private final ArrayList<Extension> libraries = new ArrayList<Extension>();
 	
 	private ExtensionManager() {
-		this.createExtensions();
+//		this.createExtensions();
+		this.createHardCodeExtensions();
 	}
 	
 	public static ExtensionManager getInstance() {
@@ -106,6 +107,12 @@ public class ExtensionManager {
 		this.createExtensions(extDirs, extFiles);
 	}
 
+	
+	private void createHardCodeExtensions(){
+		addExtension("org.lobobrowser.primary.ext.ExtensionImpl", "Lobo's Primary Extension", 10, true );
+		addExtension("org.lobobrowser.jweb.ext.NavigatorExtensionImpl", "Java Web Content", 7, false );
+	}
+	
 	private void addExtension(File file) throws java.io.IOException {
 		if(!file.exists()) {
 			logger.warning("addExtension(): File " + file + " does not exist.");
@@ -127,6 +134,25 @@ public class ExtensionManager {
 			extensions.add(ei);
 		}		
 	}
+	
+	private void addExtension(String nombreClase, String extID, int prioridad, boolean primario){
+		
+		Extension ei = new Extension(nombreClase,extID,prioridad,primario);
+		this.extensionById.put(ei.getId(), ei);
+		if(ei.isLibraryOnly()) {
+			if(logger.isLoggable(Level.INFO)) {
+				logger.info("createExtensions(): Loaded library (no lobo-extension.properties): " + ei); 
+			}
+			libraries.add(ei);
+		}
+		else {
+			if(logger.isLoggable(Level.INFO)) {
+				logger.info("createExtensions(): Loaded extension: " + ei); 
+			}
+			extensions.add(ei);
+		}		
+	}
+	
 	
 	private void createExtensions(File[] extDirs, File[] extFiles) {
 		Collection<Extension> extensions = this.extensions;
@@ -156,18 +182,7 @@ public class ExtensionManager {
 					logger.log(Level.WARNING, "createExtensions(): Unable to load '" + file + "'.", ioe);
 				}
 			}
-//			try {
-//				this.addExtension(new File(this.getClass().getResource("/extensions/primary.jar").toURI().getPath()));
-//				this.addExtension(new File(this.getClass().getResource("/extensions/jweb-ext.jar").toURI().getPath()));
-//				this.addExtension(new File(this.getClass().getResource("/extensions/js.jar").toURI().getPath()));
-//				this.addExtension(new File(this.getClass().getResource("/extensions/jlfgr-1_0.jar").toURI().getPath()));
-//				this.addExtension(new File(this.getClass().getResource("/extensions/cobra-no-commons.jar").toURI().getPath()));
-//			} catch (IOException e) {
-//				logger.log(Level.WARNING, "createExtensions(): Unable to load " + "extensions");
-//			} catch (URISyntaxException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
+
 		}
 		for(File file : extFiles) {
 			try {
