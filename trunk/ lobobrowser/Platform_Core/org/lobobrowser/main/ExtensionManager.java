@@ -35,7 +35,6 @@ import java.util.logging.*;
  * Manages platform extensions.
  */
 public class ExtensionManager {
-	private static final Logger logger = Logger.getLogger(ExtensionManager.class.getName());
 	private static final ExtensionManager instance = new ExtensionManager();
 	private static final String EXT_DIR_NAME = "ext";
 	
@@ -64,9 +63,9 @@ public class ExtensionManager {
 		File[] extDirs;
 		File[] extFiles;
 		String extDirsProperty = System.getProperty("java.ext.dirs");
-		System.out.println(extDirsProperty);
+
 		File appDir2 = PlatformInit.getInstance().getApplicationDirectory();
-		System.out.println(appDir2.getAbsolutePath());
+
 		if(extDirsProperty != null) {
 			File appDir = PlatformInit.getInstance().getApplicationDirectory();
 			//TODO JF: la linea que esta abajo de todo este comentario es la que hay 
@@ -75,12 +74,12 @@ public class ExtensionManager {
 			extDirs = new File[] { new File(".") };
 		}
 		else {
-			System.out.println("ENTRA");
+
 			StringTokenizer tok = new StringTokenizer(extDirsProperty, ",");
 			ArrayList<File> extDirsList = new ArrayList<File>();
 			while(tok.hasMoreTokens()) {
 				String token = tok.nextToken();
-				System.out.println("TOKEN"+token.trim());
+
 				extDirsList.add(new File(token.trim()));
 			}
 			extDirs = extDirsList.toArray(new File[0]);
@@ -97,12 +96,6 @@ public class ExtensionManager {
 				extFilesList.add(new File(token.trim()));
 			}
 			extFiles = extFilesList.toArray(new File[0]);			
-		}
-		for (int i = 0; i < extDirs.length; i++) {
-			System.out.println("extDirs: "+extDirs[i]);
-		}
-		for (int i = 0; i < extFiles.length; i++) {
-			System.out.println("extFiles: "+extFiles[i]);
 		}
 		this.createExtensions(extDirs, extFiles);
 	}
@@ -127,14 +120,11 @@ public class ExtensionManager {
 		for(Extension ei : libraries) {
 			try {
 				libraryURLCollection.add(ei.getCodeSource());
-				System.out.println("SourceCode: "+ei.getCodeSource());
+
 			} catch(java.net.MalformedURLException thrown) {
-				logger.log(Level.SEVERE, "createExtensions()", thrown);
 			}
 		}
-		if(logger.isLoggable(Level.INFO)) {
-			logger.info("createExtensions(): Creating library class loader with URLs=[" + libraryURLCollection + "].");
-		}
+
 		ClassLoader librariesCL = new URLClassLoader(libraryURLCollection.toArray(new URL[0]), rootClassLoader);		
 				
 		// Initialize class loader in each extension, using librariesCL as
@@ -148,10 +138,9 @@ public class ExtensionManager {
 			JoinableTask task = new JoinableTask() {
 				public void execute() {
 					try {
-						System.out.println("Init Class Loader !");
+
 						fei.initClassLoader(pcl);
 					} catch(Exception err) {
-						logger.log(Level.WARNING, "Unable to create class loader for " + fei + ".", err);
 					}
 				}
 
@@ -176,22 +165,17 @@ public class ExtensionManager {
 	
 	private void addExtension(File file) throws java.io.IOException {
 		if(!file.exists()) {
-			logger.warning("addExtension(): File " + file + " does not exist.");
 			return;
 		}
 		
 		Extension ei = new Extension(file);
 		this.extensionById.put(ei.getId(), ei);
 		if(ei.isLibraryOnly()) {
-			if(logger.isLoggable(Level.INFO)) {
-				logger.info("createExtensions(): Loaded library (no lobo-extension.properties): " + ei); 
-			}
+
 			libraries.add(ei);
 		}
 		else {
-			if(logger.isLoggable(Level.INFO)) {
-				logger.info("createExtensions(): Loaded extension: " + ei); 
-			}
+
 			extensions.add(ei);
 		}		
 	}
@@ -201,15 +185,11 @@ public class ExtensionManager {
 		Extension ei = new Extension(nombreClase,extID,prioridad,primario);
 		this.extensionById.put(ei.getId(), ei);
 		if(ei.isLibraryOnly()) {
-			if(logger.isLoggable(Level.INFO)) {
-				logger.info("createExtensions(): Loaded library (no lobo-extension.properties): " + ei); 
-			}
+
 			libraries.add(ei);
 		}
 		else {
-			if(logger.isLoggable(Level.INFO)) {
-				logger.info("createExtensions(): Loaded extension: " + ei); 
-			}
+
 			extensions.add(ei);
 		}
 	}
@@ -224,23 +204,18 @@ public class ExtensionManager {
 		extensionById.clear();
 		for(File extDir : extDirs) {
 			if(!extDir.exists()) {
-				logger.warning("createExtensions(): Directory '" + extDir + "' not found.");
 				if(PlatformInit.getInstance().isCodeLocationDirectory()) {
-					logger.warning("createExtensions(): The application code location is a directory, which means the application is probably being run from an IDE. Additional setup is required. Please refer to README.txt file.");					
 				}
 				continue;
 			}
 			File[] extRoots = extDir.listFiles(new ExtFileFilter());
 			if(extRoots == null || extRoots.length == 0) {
-				logger.warning("createExtensions(): No potential extensions found in " + extDir + " directory.");
 				continue;
 			}
 			for(File file : extRoots) {
 				try {
-					System.out.println("addExt: "+file.getAbsolutePath());
 					this.addExtension(file);
 				} catch(IOException ioe) {
-					logger.log(Level.WARNING, "createExtensions(): Unable to load '" + file + "'.", ioe);
 				}
 			}
 
@@ -249,13 +224,10 @@ public class ExtensionManager {
 			try {
 				this.addExtension(file);
 			} catch(IOException ioe) {
-				logger.log(Level.WARNING, "createExtensions(): Unable to load '" + file + "'.", ioe);
 			}				
 		}
 
-		if(this.extensionById.size() == 0) {
-			logger.warning("createExtensions(): No extensions found. This is indicative of a setup error. Extension directories scanned are: " + Arrays.asList(extDirs) + ".");
-		}
+		if(this.extensionById.size() == 0) {		}
 		
 		// Get the system class loader
 		ClassLoader rootClassLoader = this.getClass().getClassLoader();
@@ -265,14 +237,10 @@ public class ExtensionManager {
 		for(Extension ei : libraries) {
 			try {
 				libraryURLCollection.add(ei.getCodeSource());
-				System.out.println("SourceCode: "+ei.getCodeSource());
 			} catch(java.net.MalformedURLException thrown) {
-				logger.log(Level.SEVERE, "createExtensions()", thrown);
 			}
 		}
-		if(logger.isLoggable(Level.INFO)) {
-			logger.info("createExtensions(): Creating library class loader with URLs=[" + libraryURLCollection + "].");
-		}
+
 		ClassLoader librariesCL = new URLClassLoader(libraryURLCollection.toArray(new URL[0]), rootClassLoader);		
 				
 		// Initialize class loader in each extension, using librariesCL as
@@ -288,7 +256,6 @@ public class ExtensionManager {
 					try {
 						fei.initClassLoader(pcl);
 					} catch(Exception err) {
-						logger.log(Level.WARNING, "Unable to create class loader for " + fei + ".", err);
 					}
 				}
 
@@ -354,7 +321,6 @@ public class ExtensionManager {
 			try {
 				ei.initExtensionWindow(context);
 			} catch(Exception err) {
-				logger.log(Level.SEVERE, "initExtensionsWindow(): Extension could not properly initialize a new window.", err);
 			}
 		}
 	}
@@ -364,9 +330,7 @@ public class ExtensionManager {
 		for(Extension ei : this.extensions) {
 			try {				
 				ei.shutdownExtensionWindow(context);
-			} catch(Exception err) {
-				logger.log(Level.SEVERE, "initExtensionsWindow(): Extension could not properly process window shutdown.", err);
-			}
+			} catch(Exception err) {			}
 		}
 	}
 
@@ -380,7 +344,6 @@ public class ExtensionManager {
 					return clientlet;
 				}
 			} catch(Exception thrown) {
-				logger.log(Level.SEVERE, "getClientlet(): Extension " + ei + " threw exception.", thrown);
 			}
 		}
 
@@ -392,7 +355,6 @@ public class ExtensionManager {
 					return clientlet;
 				}
 			} catch(Exception thrown) {
-				logger.log(Level.SEVERE, "getClientlet(): Extension " + ei + " threw exception.", thrown);				
 			}
 		}		
 		return null;
@@ -410,9 +372,7 @@ public class ExtensionManager {
 						dispatched = true;
 					}
 				}
-				if(!dispatched && logger.isLoggable(Level.INFO)) {
-					logger.log(Level.WARNING, "No error handlers found for error that occurred while processing response=[" + response + "].", exception);
-				}
+
 			}
 		});
 	}
@@ -424,7 +384,6 @@ public class ExtensionManager {
 			} catch(NavigationVetoException nve) {
 				throw nve;
 			} catch(Exception other) {
-				logger.log(Level.SEVERE, "dispatchBeforeNavigate(): Extension threw an unexpected exception.", other);
 			}
 		}
 	}
@@ -436,7 +395,6 @@ public class ExtensionManager {
 			} catch(NavigationVetoException nve) {
 				throw nve;
 			} catch(Exception other) {
-				logger.log(Level.SEVERE, "dispatchBeforeLocalNavigate(): Extension threw an unexpected exception.", other);
 			}
 		}
 	}
@@ -448,7 +406,6 @@ public class ExtensionManager {
 			} catch(NavigationVetoException nve) {
 				throw nve;
 			} catch(Exception other) {
-				logger.log(Level.SEVERE, "dispatchBeforeWindowOpen(): Extension threw an unexpected exception.", other);
 			}
 		}
 	}
@@ -458,7 +415,6 @@ public class ExtensionManager {
 			try {
 				connection = ei.dispatchPreConnection(connection);
 			} catch(Exception other) {
-				logger.log(Level.SEVERE, "dispatchPreConnection(): Extension threw an unexpected exception.", other);
 			}
 		}
 		return connection;
@@ -469,7 +425,6 @@ public class ExtensionManager {
 			try {
 				connection = ei.dispatchPostConnection(connection);
 			} catch(Exception other) {
-				logger.log(Level.SEVERE, "dispatchPostConnection(): Extension threw an unexpected exception.", other);
 			}
 		}
 		return connection;

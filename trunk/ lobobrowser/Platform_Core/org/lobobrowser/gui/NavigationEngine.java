@@ -32,7 +32,6 @@ import org.lobobrowser.util.Urls;
  * Note: This class is not thread safe on its own.
  */
 public class NavigationEngine {
-	private static final Logger logger = Logger.getLogger(NavigationEngine.class.getName());
 	private final ArrayList<NavigationEntry> history = new ArrayList<NavigationEntry>();
 
 	private int currentIndex = -1;
@@ -46,9 +45,7 @@ public class NavigationEngine {
 	}
 
 	public void addNavigationEntry(NavigationEntry entry) {
-		if(logger.isLoggable(Level.INFO)) {
-			logger.info("addNavigationEntry(): entry=" + entry);
-		}
+
 		int newIndex = this.currentIndex + 1;
 		if(newIndex == this.history.size()) {
 			this.history.add(entry);
@@ -163,9 +160,7 @@ public class NavigationEngine {
 	        }
 	        return null;
 	    } catch(java.net.MalformedURLException mfu) {
-	        if(logger.isLoggable(Level.INFO)) {
-	            logger.log(Level.INFO, "findEntry(): URL is malformed: " + absoluteURL, mfu);
-	        }
+
 	        return null;
 	    }
 	}

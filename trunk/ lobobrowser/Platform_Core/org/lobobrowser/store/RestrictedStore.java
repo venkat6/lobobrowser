@@ -34,7 +34,6 @@ import org.lobobrowser.io.*;
 import org.lobobrowser.util.WrapperException;
 
 public final class RestrictedStore implements QuotaSource, ManagedStore {
-	private static final Logger logger = Logger.getLogger(RestrictedStore.class.getName());
 	
 	/**
 	 * Canonical base directory.
@@ -82,9 +81,7 @@ public final class RestrictedStore implements QuotaSource, ManagedStore {
 			prevSize = this.size;
 			this.updateSizeFileImpl(totalSize);
 		}
-		if(prevSize != -1 && Math.abs(totalSize - prevSize) > 10000) {
-			logger.warning("updateSizeFile(): Corrected a size discrepancy of " + (totalSize - prevSize) + " bytes in store '" + this.baseDirectory + "'.");
-		}
+		
 		return totalSize;
 	}
 

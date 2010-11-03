@@ -30,7 +30,6 @@ import java.util.*;
 import java.util.logging.*;
 
 public class Urls {
-	private static final Logger logger = Logger.getLogger(Urls.class.getName());
 	public static final DateFormat PATTERN_RFC1123 = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss zzz", Locale.US);
 
 	static {
@@ -106,7 +105,6 @@ public class Urls {
 							seconds = Integer.parseInt(value);
 							return new Long(baseTime + seconds * 1000);
 						} catch(NumberFormatException nfe) {
-							logger.warning("getExpiration(): Bad Cache-Control max-age value: " + value);
 							// ignore
 						}
 					}
@@ -126,7 +124,6 @@ public class Urls {
 					seconds = Integer.parseInt(expires);
 					return new Long(baseTime + seconds * 1000);
 				} catch(NumberFormatException nfe) {
-					logger.warning("getExpiration(): Bad Expires header value: " + expires);
 				}
 			}
 		}

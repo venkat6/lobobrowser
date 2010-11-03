@@ -8,7 +8,6 @@ import java.util.logging.*;
  * shutting down the thread pool.
  */
 public class SimpleThreadPool {
-	private static final Logger logger = Logger.getLogger(SimpleThreadPool.class.getName());
 	private final LinkedList taskList = new LinkedList();
 	private final Set runningSet = new HashSet();
 	private final int minThreads;
@@ -121,18 +120,17 @@ public class SimpleThreadPool {
 						try {
 							currentThread.setName(baseName + ":" + task.toString());
 						} catch(Throwable thrown) {
-							logger.log(Level.WARNING, "run(): Unable to set task name.", thrown);
 						}
 						try {
 							task.run();
 						} catch(Throwable thrown) {
-							logger.log(Level.SEVERE, "run(): Error in task: " + task + ".", thrown);
+							
 						}
 					} finally {
 						currentThread.setName(baseName);
 					}
 				} catch(Throwable thrown) {
-					logger.log(Level.SEVERE, "run(): Error in thread pool: " + SimpleThreadPool.this.name + ".", thrown);
+					
 				}
 			}
 		}

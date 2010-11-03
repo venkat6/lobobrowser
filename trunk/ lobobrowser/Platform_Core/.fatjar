@@ -1,7 +1,7 @@
 #Fat Jar Configuration File
-#Tue Nov 02 22:24:13 ART 2010
+#Wed Nov 03 17:30:00 GMT-03:00 2010
 onejar.license.required=false
-manifest.classpath=
+manifest.classpath=cobra-no-commons.jar js.jar jlfgr-1_0.jar
 manifest.removesigners=true
 onejar.checkbox=false
 jarname=Platform_Core_fat.jar

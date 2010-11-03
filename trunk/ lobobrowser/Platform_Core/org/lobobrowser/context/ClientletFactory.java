@@ -26,7 +26,7 @@ import org.lobobrowser.security.*;
 
 public class ClientletFactory
 {
-	//private static final Logger logger = Logger.getLogger(ClientletFactory.class.getName());
+
     private static ClientletFactory instance;
         
     private ClientletFactory()

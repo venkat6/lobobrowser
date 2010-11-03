@@ -33,7 +33,7 @@ import java.util.*;
  * @author J. H. S.
  */
 public class Bean {
-    //private static final java.util.logging.Logger logger = Logger.getLogger(Bean.class);
+
     private final Class clazz;
 
     public Bean(Class clazz) {

@@ -118,8 +118,6 @@ public class ReuseManager {
     				} catch(IOException ioe) {
     					// VM must have died. We don't have logging at this point.
     					PlatformInit.getInstance().initLogging(false);
-    					Logger.getLogger(ReuseManager.class.getName())
-    						.log(Level.WARNING, "Another instance of the application must have been running but was not shut down properly.", ioe);
     					portFile.delete();
     				}
     			}

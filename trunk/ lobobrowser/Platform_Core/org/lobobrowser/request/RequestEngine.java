@@ -26,7 +26,6 @@ import java.util.*;
 import java.security.*;
 
 import javax.net.ssl.HttpsURLConnection;
-import java.util.logging.*;
 import org.lobobrowser.async.AsyncResult;
 import org.lobobrowser.async.AsyncResultImpl;
 import org.lobobrowser.clientlet.*;
@@ -38,8 +37,7 @@ import org.lobobrowser.util.*;
 import org.lobobrowser.util.io.*;
 
 public final class RequestEngine {
-	private static final Logger logger = Logger.getLogger(RequestEngine.class.getName());
-	private static final boolean loggerInfo = logger.isLoggable(Level.INFO);
+
 
 	private final SimpleThreadPool threadPool;
 	private final Collection processingRequests = new HashSet();
@@ -155,11 +153,7 @@ public final class RequestEngine {
 						bufOut.write((byte) '=');
 						bufOut.write(encValue.getBytes("UTF-8"));
 					} else {
-						logger
-								.warning("postData(): Ignoring non-textual parameter "
-										+ name
-										+ " for POST with encoding "
-										+ encoding + ".");
+						
 					}
 				}
 			} else {
@@ -171,11 +165,7 @@ public final class RequestEngine {
 			// Do not add a line break to post content. Some servers
 			// can be picky about that (namely, java.net).
 			byte[] postContent = bufOut.toByteArray();
-			if (loggerInfo) {
-				logger
-						.info("postData(): Will post: "
-								+ new String(postContent));
-			}
+
 			if (connection instanceof HttpURLConnection) {
 				if (boolSettings.isHttpUseChunkedEncodingPOST()) {
 					((HttpURLConnection) connection)
@@ -225,11 +215,7 @@ public final class RequestEngine {
 								in.close();
 							}
 						} else {
-							logger
-									.warning("postData(): Skipping parameter "
-											+ name
-											+ " of unknown type for POST with encoding "
-											+ encoding + ".");
+							
 						}
 					}
 				}
@@ -275,10 +261,7 @@ public final class RequestEngine {
 					sb.append(URLEncoder.encode(paramText, "UTF-8"));
 					separator = '&';
 				} else {
-					logger
-							.warning("completeGetUrl(): Skipping non-textual parameter "
-									+ parameters[i].getName()
-									+ " in GET request.");
+				
 				}
 			}
 			newNoRefURL = sb.toString();
@@ -329,8 +312,7 @@ public final class RequestEngine {
 					connection.addRequestProperty(headerName, headers[i]
 							.getValue());
 				} else {
-					logger.warning("run(): Ignoring request header: "
-							+ headerName);
+					
 				}
 			}
 		}
@@ -353,11 +335,7 @@ public final class RequestEngine {
 						try {
 							persistentContent = cm.getPersistent(url, false);
 						} catch (java.io.IOException ioe) {
-							logger
-									.log(
-											Level.WARNING,
-											"getCacheInfo(): Unable to load cache file.",
-											ioe);
+							
 						}
 					}
 				}
@@ -380,9 +358,7 @@ public final class RequestEngine {
 			public Object run() {
 				try {
 					long currentTime = System.currentTimeMillis();
-					if(loggerInfo) {
-						logger.info("cache(): url=" + url + ",content.length=" + content.length + ",currentTime=" + currentTime);
-					}
+					
 					int actualApproxObjectSize = 0;
 					if (altObject != null) {
 						if (approxAltObjectSize < content.length) {
@@ -458,9 +434,7 @@ public final class RequestEngine {
 					try {
 						cm.putPersistent(url, out.toByteArray(), false);
 					} catch (Exception err) {
-						logger.log(Level.WARNING,
-								"cache(): Unable to cache response content.",
-								err);
+
 					}
 					if (altPersistentObject != null) {
 						try {
@@ -471,19 +445,13 @@ public final class RequestEngine {
 							objOut.flush();
 							byte[] byteArray = fileOut.toByteArray();
 							if(byteArray.length == 0) {
-								logger.log(Level.WARNING, "cache(): Serialized content has zero bytes for persistent object " + altPersistentObject + ".");
 							}
 							cm.putPersistent(url, byteArray, true);
 						} catch (Exception err) {
-							logger
-									.log(
-											Level.WARNING,
-											"cache(): Unable to write persistent cached object.",
-											err);
+							
 						}
 					}
 				} catch (Exception err) {
-					logger.log(Level.WARNING, "cache()", err);
 				}
 				return null;
 			}
@@ -511,8 +479,7 @@ public final class RequestEngine {
 			buffer.append(entry.getKey() + ": " + entry.getValue());
 			buffer.append(System.getProperty("line.separator"));
 		}
-		logger.info("printRequestHeaders(): Request headers for URI=["
-				+ connection.getURL() + "]\r\n" + buffer.toString());
+		
 	}
 
 	public void inlineRequest(RequestHandler rhandler) {
@@ -603,15 +570,7 @@ public final class RequestEngine {
 		if (cacheInfo != null) {
 			RequestType requestType = rhandler.getRequestType();
 			if(doesNotExpire(requestType)) {
-				if (loggerInfo) {
-					if (cacheInfo.hasTransientEntry()) {
-						logger.info("getURLConnection(): FROM-RAM: "
-								+ connectionUrl + ".");
-					} else {
-						logger.info("getURLConnection(): FROM-FILE: "
-								+ connectionUrl + ".");
-					}
-				}
+				
 				return cacheInfo.getURLConnection();
 			}
 			else if(!shouldRevalidateAlways(connectionUrl, requestType)) {
@@ -621,33 +580,16 @@ public final class RequestEngine {
 					.getDefaultCacheExpirationOffset();
 					if (defaultOffset != null) {
 						expires = cacheInfo.getExpiresGivenOffset(defaultOffset.longValue());
-						if(loggerInfo) {
-							java.util.Date expiresDate = expires == null ? null : new Date(expires);
-							logger.info("getURLConnection(): Used default offset for " + connectionUrl + ": expires=" + expiresDate);
-						}
+						
 					}
 				}
 				if (expires != null) {
 					if (expires.longValue() > System.currentTimeMillis()) {
-						if (loggerInfo) {
-							long secondsToExpiration = (expires.longValue() - System
-									.currentTimeMillis()) / 1000;
-							if (cacheInfo.hasTransientEntry()) {
-								logger.info("getURLConnection(): FROM-RAM: "
-										+ connectionUrl + ". Expires in "
-										+ secondsToExpiration + " seconds.");
-							} else {
-								logger.info("getURLConnection(): FROM-FILE: "
-										+ connectionUrl + ". Expires in "
-										+ secondsToExpiration + " seconds.");
-							}
-						}
+						
 						return cacheInfo.getURLConnection();
 					}
 					else {
-						if (loggerInfo) {
-							logger.info("getURLConnection(): EXPIRED: " + connectionUrl + ". Expired on " + new Date(expires) + ".");
-						}
+					
 					}
 				}
 				// If the document has expired, the cache may still
@@ -688,9 +630,7 @@ public final class RequestEngine {
 		// functionality as altering the Accept header.
 		connection = this.getSafeExtensionManager().dispatchPreConnection(connection);
 		// Print request headers
-		if (logger.isLoggable(Level.FINE)) {
-			this.printRequestHeaders(connection);
-		}
+
 		// POST data if we need to.
 		if (isPost) {
 			ParameterInfo pinfo = rhandler instanceof RedirectRequestHandler ? null
@@ -713,7 +653,7 @@ public final class RequestEngine {
 	private void processHandler(final RequestHandler rhandler,
 			final int recursionLevel, final boolean trackRequestInfo) {
 		// Method must be private.
-		boolean linfo = loggerInfo;
+
 		URL baseURL = rhandler.getLatestRequestURL();
 		RequestInfo rinfo = null;
 		ClientletResponseImpl response = null;
@@ -776,22 +716,13 @@ public final class RequestEngine {
 						HttpURLConnection hconnection = (HttpURLConnection) connection;
 						hconnection.setInstanceFollowRedirects(false);
 						int responseCode = hconnection.getResponseCode();
-						if (linfo) {
-							logger.info("run(): ResponseCode=" + responseCode
-									+ " for url=" + connectionUrl);
-						}
+					
 						if (responseCode == HttpURLConnection.HTTP_OK) {
-							if (linfo) {
-								logger.info("run(): FROM-HTTP: "
-										+ connectionUrl);
-							}
+							
 							if (this.mayBeCached(hconnection)) {
 								isCacheable = true;
 							} else {
-								if (linfo) {
-									logger.info("run(): NOT CACHEABLE: "
-											+ connectionUrl);
-								}
+								
 								if (cacheInfo != null) {
 									cacheInfo.delete();
 								}
@@ -804,10 +735,7 @@ public final class RequestEngine {
 										"Cache info missing but it is necessary to process response code "
 												+ responseCode + ".");
 							}
-							if (linfo) {
-								logger.info("run(): FROM-VALIDATION: "
-										+ connectionUrl);
-							}
+							
 							// Disconnect the HTTP connection.
 							hconnection.disconnect();
 							isContentCached = true;
@@ -821,10 +749,7 @@ public final class RequestEngine {
 						} else if (responseCode == HttpURLConnection.HTTP_MOVED_PERM
 								|| responseCode == HttpURLConnection.HTTP_MOVED_TEMP 
 								|| responseCode == HttpURLConnection.HTTP_SEE_OTHER) {
-							if (linfo) {
-								logger.info("run(): REDIRECTING: ResponseCode="
-										+ responseCode + " for url=" + url);
-							}
+							
 							RequestHandler newHandler = new RedirectRequestHandler(
 									rhandler, hconnection);
 							Thread.yield();
@@ -871,7 +796,6 @@ public final class RequestEngine {
 									altObjectSize);
 						}
 						else {
-							logger.warning("processHandler(): Cacheable response not available: " + connectionUrl);
 						}
 					} else if (cacheInfo != null
 							&& !cacheInfo.hasTransientEntry()) {
@@ -931,28 +855,15 @@ public final class RequestEngine {
 				}
 			}
 		} catch (CancelClientletException cce) {
-			if (linfo) {
-				logger.log(Level.INFO,
-						"run(): Clientlet cancelled: " + baseURL, cce);
-			}
+			
 		} catch (Throwable exception) {
 			if (rinfo != null && rinfo.isAborted()) {
-				if (linfo) {
-					logger
-							.log(
-									Level.INFO,
-									"run(): Exception ignored because request aborted.",
-									exception);
-				}
+				
 			} else {
 				try {
-					if (!rhandler.handleException(response, exception)) {
-						logger.log(Level.WARNING,
-								"Was unable to handle exception.", exception);
-					}
+					
 				} catch (Exception err) {
-					logger.log(Level.WARNING,
-							"Exception handler threw an exception.", err);
+
 				}
 			}
 		} finally {
@@ -988,7 +899,6 @@ public final class RequestEngine {
 					in.close();
 				}
 			} catch (Exception err) {
-				logger.log(Level.SEVERE, "abort()", err);
 			}
 		}
 

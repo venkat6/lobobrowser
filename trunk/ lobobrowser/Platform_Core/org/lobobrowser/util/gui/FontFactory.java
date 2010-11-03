@@ -36,8 +36,7 @@ import sun.font.FontManager;
  * @author J. H. S.
  */
 public class FontFactory {
-	private static final Logger logger = Logger.getLogger(FontFactory.class.getName());
-	private static final boolean loggableFine = logger.isLoggable(Level.FINE);
+	private static final boolean loggableFine = false;
 	private static final FontFactory instance = new FontFactory();
 	private final Set fontFamilies = new HashSet(40);
 	private final Map fontMap = new HashMap(50);
@@ -52,9 +51,6 @@ public class FontFactory {
 		synchronized(this) {
 			for(int i = 0; i < ffns.length; i++) {
 				String ffn = ffns[i];
-				if(liflag) {
-					logger.fine("FontFactory(): family=" + ffn);
-				}
 				fontFamilies.add(ffn.toLowerCase());
 			}
 		}

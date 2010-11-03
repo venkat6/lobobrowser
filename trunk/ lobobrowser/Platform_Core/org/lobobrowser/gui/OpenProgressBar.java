@@ -25,14 +25,13 @@ import java.awt.Graphics;
 import java.util.logging.*;
 
 public class OpenProgressBar extends JProgressBar {
-	private static final Logger logger = Logger.getLogger(OpenProgressBar.class.getName());
 	
 	@Override
 	public void paintComponent(Graphics g) {
 		try {
 			super.paintComponent(g);
 		} catch(Exception err) {
-			logger.log(Level.SEVERE, "paintComponent(): Swing bug?", err);
+
 		}
 	}
 }

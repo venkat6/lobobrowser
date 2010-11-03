@@ -93,7 +93,6 @@ public class Extension implements Comparable, NavigatorExtensionContext {
 			propsInputStream = propsFile.exists() ? new FileInputStream(propsFile) : null;
 		}
 		else {
-			System.out.println("JAR: "+extRoot.getAbsolutePath());
 			JarFile jarFile = new JarFile(extRoot);
 			this.isPrimary = extRoot.getName().toLowerCase().equals(PRIMARY_EXTENSION_FILE_NAME);
 			this.jarFile = jarFile;
@@ -189,15 +188,10 @@ public class Extension implements Comparable, NavigatorExtensionContext {
 //	}
 
 	public void initClassLoader(ClassLoader parentClassLoader) throws java.net.MalformedURLException, ClassNotFoundException, IllegalAccessException, InstantiationException {
-		int i = 0;
-		System.out.println(i++);
-		
 		String extClassName = this.extClassName;
-		System.out.println(i++);
 		NavigatorExtension pe = null;
-		System.out.println("A: "+extClassName);
+
 		if(extClassName != null) {
-			System.out.println("extClassName: "+extClassName);
 			Class extClass = parentClassLoader.loadClass(extClassName);
 			pe = (NavigatorExtension) extClass.newInstance();
 		}

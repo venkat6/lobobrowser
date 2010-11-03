@@ -58,7 +58,6 @@ import org.lobobrowser.security.*;
  * @see PlatformInit#init(boolean, boolean)
  */
 public class FramePanel extends JPanel implements NavigatorFrame {
-	private static final Logger logger = Logger.getLogger(FramePanel.class.getName());
 	private final String windowId;
 	private final NavigationEngine navigationEngine = new NavigationEngine();
 	private final FramePanel knownParentFrame;
@@ -510,9 +509,7 @@ public class FramePanel extends JPanel implements NavigatorFrame {
 	}
 
 	protected void replaceContentImpl(final ClientletResponse response, final ComponentContent content) {
-		if(logger.isLoggable(Level.INFO)) {
-			logger.info("replaceContentImpl(): this=" + this + ",response=" + response + ", content=" + content);
-		}
+
 		// Security note: Currently expected to be private.
 		// Always called in GUI thread.
 		// removeAll and add will invalidate.
@@ -638,9 +635,7 @@ public class FramePanel extends JPanel implements NavigatorFrame {
 		try {
 			this.dispatchBeforeNavigate(event);
 		} catch(NavigationVetoException nve) {
-			if(logger.isLoggable(Level.INFO)) {
-				logger.info("navigateLocal(): Navigation was vetoed: " + nve.getMessage());
-			}
+
 			return;
 		}
 		TargetType type = event.getTargetType();
@@ -698,9 +693,7 @@ public class FramePanel extends JPanel implements NavigatorFrame {
 		try {
 			this.dispatchBeforeLocalNavigate(event);
 		} catch(NavigationVetoException nve) {
-			if(logger.isLoggable(Level.INFO)) {
-				logger.info("navigateLocal(): Navigation was vetoed: " + nve.getMessage());
-			}
+
 			return;
 		}
 		String referrer = null;
@@ -787,9 +780,7 @@ public class FramePanel extends JPanel implements NavigatorFrame {
 		try {
 			this.dispatchBeforeWindowOpen(event);
 		} catch(NavigationVetoException nve) {
-			if(logger.isLoggable(Level.INFO)) {
-				logger.info("navigateLocal(): Navigation was vetoed: " + nve.getMessage());
-			}
+
 			return null;
 		}
 		return FramePanel.openWindow(this, url, windowId, windowProperties, method, pinfo);
@@ -1176,9 +1167,7 @@ public class FramePanel extends JPanel implements NavigatorFrame {
 
 	public void resizeWindowBy(int byWidth, int byHeight) {
 		Window window = this.getWindow();
-		if(logger.isLoggable(Level.INFO)) {
-			logger.info("resizeWindowBy(): byWidth=" + byWidth + ",byHeight=" + byHeight + "; window=" + window);
-		}
+
 		if(window != null) {
 			window.setSize(window.getWidth() + byWidth, window.getHeight() + byHeight);
 		}
@@ -1186,9 +1175,7 @@ public class FramePanel extends JPanel implements NavigatorFrame {
 
 	public void resizeWindowTo(int width, int height) {
 		Window window = this.getWindow();
-		if(logger.isLoggable(Level.INFO)) {
-			logger.info("resizeWindowTo(): width=" + width + ",height=" + height + "; window=" + window);
-		}
+
 		if(window != null) {
 			window.setSize(width, height);
 		}

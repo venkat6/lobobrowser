@@ -40,7 +40,6 @@ import java.util.logging.*;
  * Default implementation of the {@link NavigatorWindow} interface.
  */
 public class NavigatorWindowImpl implements NavigatorWindow, WindowCallback {	
-	private static final Logger logger = Logger.getLogger(NavigatorWindowImpl.class.getName());	
 	private static final int HGAP = 4;
 	private static final int VGAP = 2;
 	
@@ -119,9 +118,7 @@ public class NavigatorWindowImpl implements NavigatorWindow, WindowCallback {
 				@Override
 				public void windowClosed(WindowEvent e) {
 					if(!launched) {
-						if(logger.isLoggable(Level.INFO)) {
-							logger.info("NavigatorWindowImpl(): Disposing browserWindow due to progress window getting closed.");
-						}
+
 						browserWindow.dispose();
 					}
 				}
@@ -145,9 +142,7 @@ public class NavigatorWindowImpl implements NavigatorWindow, WindowCallback {
 		this.launched = true;
 		if(this.progressWindow != null) {
 			if(!progressWindow.isDisplayable()) {
-				if(logger.isLoggable(Level.INFO)) {
-					logger.info("resetAsNavigator(): Progress window is not displayable, so it must have been closed; cancelling operation.");
-				}
+
 				this.browserWindow.dispose();
 				return;
 			}
@@ -234,7 +229,6 @@ public class NavigatorWindowImpl implements NavigatorWindow, WindowCallback {
 			props.load(in);
 		} catch(IOException ioe) {
 			// impossible
-			logger.log(Level.SEVERE, "unexpected", ioe);
 		}
 		return props;		
 	}
@@ -332,7 +326,6 @@ public class NavigatorWindowImpl implements NavigatorWindow, WindowCallback {
 		final NavigatorWindowEvent event = new NavigatorWindowEvent(this, NavigatorEventType.DOCUMENT_RENDERING, frame, response);		
 		latestAccessedFrame = event.getNavigatorFrame();
 		if(!EVENT.fireEvent(event)) {
-			logger.warning("handleDocumentRendering(): Did not deliver event to any window: " + event);
 		}
 	}
 
