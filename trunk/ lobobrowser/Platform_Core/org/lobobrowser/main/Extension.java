@@ -171,23 +171,42 @@ public class Extension implements Comparable, NavigatorExtensionContext {
 	private ClassLoader classLoader;
 	private NavigatorExtension platformExtension;
 
+//	public void initClassLoader(ClassLoader parentClassLoader) throws java.net.MalformedURLException, ClassNotFoundException, IllegalAccessException, InstantiationException {
+//		URL url = this.extRoot.toURL();
+//		java.net.URL[] urls = new java.net.URL[] { url  };
+//		ExtensionClassLoader classLoader = new ExtensionClassLoader(urls, parentClassLoader); 
+//		String extClassName = this.extClassName;
+//		NavigatorExtension pe = null;
+//		if(extClassName != null) {
+//			System.out.println("extClassName: "+extClassName);
+//			Class extClass = classLoader.loadClass(extClassName);
+//			pe = (NavigatorExtension) extClass.newInstance();
+//		}
+//		synchronized(this) {
+//			this.classLoader = classLoader;
+//			this.platformExtension = pe;
+//		}
+//	}
+
 	public void initClassLoader(ClassLoader parentClassLoader) throws java.net.MalformedURLException, ClassNotFoundException, IllegalAccessException, InstantiationException {
-		URL url = this.extRoot.toURL();
-		java.net.URL[] urls = new java.net.URL[] { url  };
-		ExtensionClassLoader classLoader = new ExtensionClassLoader(urls, parentClassLoader); 
+		int i = 0;
+		System.out.println(i++);
+		
 		String extClassName = this.extClassName;
+		System.out.println(i++);
 		NavigatorExtension pe = null;
+		System.out.println("A: "+extClassName);
 		if(extClassName != null) {
 			System.out.println("extClassName: "+extClassName);
-			Class extClass = classLoader.loadClass(extClassName);
+			Class extClass = parentClassLoader.loadClass(extClassName);
 			pe = (NavigatorExtension) extClass.newInstance();
 		}
 		synchronized(this) {
-			this.classLoader = classLoader;
+//			this.classLoader = classLoader;
 			this.platformExtension = pe;
 		}
 	}
-
+	
 	public ClassLoader getClassLoader() {
 		synchronized(this) {	
 			return this.classLoader;
